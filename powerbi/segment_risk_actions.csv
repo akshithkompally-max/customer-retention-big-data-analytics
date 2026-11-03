@@ -1,0 +1,9 @@
+Segment,Customers,Revenue,AvgChurnProb,ExpectedRevenueAtRisk,Action
+At Risk,578,548942.37,0.5689865098921147,323956.0305898216,"Win-back campaign, survey on reasons for leaving"
+Cant Lose Them,205,535114.38,0.31607755526263254,192256.9067129053,"Personal outreach, win-back discount, account manager call"
+Champions,742,5382784.28,0.081052384047148,239335.2308387234,"VIP programme, early access, referral rewards"
+Hibernating / Lost,951,244248.5,0.7027230687668922,168917.3911255254,Low-cost reactivation email; otherwise suppress
+Loyal Customers,802,1560659.07,0.2715030529333181,380526.05510161916,"Upsell bundles, loyalty points, cross-sell"
+Need Attention,494,225455.08,0.5425180151277854,116187.49944479339,"Time-limited reminders, personalised recommendations"
+New / Promising,283,71758.33,0.5505545311774488,38422.38855589499,"Onboarding emails, welcome offer, product education"
+Potential Loyalists,279,168265.63,0.4483432615610345,74922.86061736329,"Second-purchase offers, membership invite"

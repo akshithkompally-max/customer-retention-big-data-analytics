@@ -1,0 +1,45 @@
+// ===== Power BI measures (Modeling -> New measure). Table names: fact_sales, dim_customer, dim_date =====
+
+Total Revenue      = SUM ( fact_sales[Revenue] )
+Total Orders       = DISTINCTCOUNT ( fact_sales[InvoiceNo] )
+Total Customers    = DISTINCTCOUNT ( fact_sales[CustomerID] )
+Avg Order Value    = DIVIDE ( [Total Revenue], [Total Orders] )
+Revenue per Customer = DIVIDE ( [Total Revenue], [Total Customers] )
+
+Repeat Customers   = CALCULATE ( COUNTROWS ( dim_customer ), dim_customer[Frequency] > 1 )
+Repeat Rate %      = DIVIDE ( [Repeat Customers], COUNTROWS ( dim_customer ) )
+
+High Value Customers = CALCULATE ( COUNTROWS ( dim_customer ), dim_customer[ValueTier] = "High value (top 20%)" )
+High Value Revenue Share =
+    DIVIDE (
+        CALCULATE ( SUM ( dim_customer[Monetary] ), dim_customer[ValueTier] = "High value (top 20%)" ),
+        SUM ( dim_customer[Monetary] )
+    )
+
+Champions Revenue % =
+    DIVIDE (
+        CALCULATE ( SUM ( dim_customer[Monetary] ), dim_customer[Segment] = "Champions" ),
+        SUM ( dim_customer[Monetary] )
+    )
+
+Avg Churn Probability = AVERAGE ( dim_customer[ChurnProb] )
+High Risk Customers   = CALCULATE ( COUNTROWS ( dim_customer ), dim_customer[RiskBand] = "High" )
+Expected Revenue At Risk = SUMX ( dim_customer, dim_customer[Monetary] * dim_customer[ChurnProb] )
+
+Revenue MoM % =
+    VAR cur  = [Total Revenue]
+    VAR prev = CALCULATE ( [Total Revenue], DATEADD ( dim_date[Date], -1, MONTH ) )
+    RETURN DIVIDE ( cur - prev, prev )
+
+Revenue (UK) = CALCULATE ( [Total Revenue], dim_customer[Country] = "United Kingdom" )
+Export Share % = 1 - DIVIDE ( [Revenue (UK)], [Total Revenue] )
+
+// ===== Calculated table: date dimension (Modeling -> New table) =====
+dim_date =
+    ADDCOLUMNS (
+        CALENDAR ( DATE ( 2010, 12, 1 ), DATE ( 2011, 12, 31 ) ),
+        "Year", YEAR ( [Date] ),
+        "Month No", MONTH ( [Date] ),
+        "Month", FORMAT ( [Date], "MMM-yy" ),
+        "Month Start", DATE ( YEAR ( [Date] ), MONTH ( [Date] ), 1 )
+    )
